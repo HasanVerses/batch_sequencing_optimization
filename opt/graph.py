@@ -3,6 +3,7 @@ import random
 import networkx as nx
 import numpy as np
 import pandas as pd
+import time
 
 
 
@@ -113,11 +114,25 @@ def random_graph(num_nodes=40, connect_prob=0.75):
 
 def get_distance_matrix(graph):
     nodes = list(graph)
+
+    start_time = time.time()
     distances_df = pd.DataFrame(columns=nodes, index=nodes)
     distances = graph.distances if hasattr(graph, 'distances') else {k: v for (k, v) in list(nx.all_pairs_dijkstra_path_length(graph))}
-    for k in distances.keys():
-        for v in distances[k].keys():
-            distances_df.loc[k][v] = distances[k][v]
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time to distances: {elapsed_time} seconds")
+
+    # start_time = time.time()
+    # for k in distances.keys():
+    #     for v in distances[k].keys():
+    #         distances_df.loc[k][v] = distances[k][v]
+    #
+    # end_time = time.time()
+    # elapsed_time = end_time - start_time
+    # print(f"Elapsed time to distances_df: {elapsed_time} seconds")
+
+    distances_df = pd.DataFrame.from_dict(distances, orient='index')
+
     return distances_df
 
 
